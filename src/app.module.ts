@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Doctor } from './doctors/doctor.entity';
+import { Appointment } from './appointments/appointment.entity';
+import { DoctorsModule } from './doctors/doctors.modules';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env'] }),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
         return {
@@ -16,16 +17,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           username: config.get('DB_USERNAME'),
           password: config.get('DB_PASSWORD'),
           database: config.get('DB_DATABASE'),
-          entities: [
-
-          ],
+          entities: [Doctor, Appointment],
           synchronize: process.env.NODE_ENV !== 'production',
         };
       },
       inject: [ConfigService],
     }),
+    DoctorsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule { }
