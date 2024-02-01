@@ -16,8 +16,9 @@ export class DoctorsService {
     }
 
     async create(doctor: Partial<Doctor>): Promise<Doctor> {
-        const newUser = this.doctorsRepository.create(doctor);
-        return await this.doctorsRepository.save(newUser);
+        const newDoctor = this.doctorsRepository.create(doctor);
+
+        return await this.doctorsRepository.save(newDoctor);
     }
 
     async update(id: string, doctor: Partial<Doctor>): Promise<Doctor> {

@@ -3,7 +3,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Doctor } from './doctors/doctor.entity';
 import { Appointment } from './appointments/appointment.entity';
-import { DoctorsModule } from './doctors/doctors.modules';
+import { DoctorsModule } from './doctors/doctors.module';
+import { AppoinmentsModule } from './appointments/appointments.module';
+import { PatientsModule } from './patients/patients.module';
+import { Patient } from './patients/patient.entity';
 
 @Module({
   imports: [
@@ -17,13 +20,15 @@ import { DoctorsModule } from './doctors/doctors.modules';
           username: config.get('DB_USERNAME'),
           password: config.get('DB_PASSWORD'),
           database: config.get('DB_DATABASE'),
-          entities: [Doctor, Appointment],
+          entities: [Doctor, Appointment, Patient],
           synchronize: process.env.NODE_ENV !== 'production',
         };
       },
       inject: [ConfigService],
     }),
     DoctorsModule,
+    AppoinmentsModule,
+    PatientsModule,
   ],
 })
 export class AppModule { }
