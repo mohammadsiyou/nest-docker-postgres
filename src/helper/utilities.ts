@@ -1,14 +1,14 @@
 export const splitTime = (startDate: number, endDate: number, timeSlot: number) => {
-    const appointments: number[] = [];
+    const times: number[] = [];
 
     const timeDiff = endDate - startDate;
 
     if (timeDiff < timeSlot)
-        return appointments;
+        return times;
 
-    for (let i = startDate; i < endDate; i += timeSlot) {
-        appointments.push(i);
+    for (let i = startDate; i <= (endDate - timeSlot); i += timeSlot) {
+        times.push(i);
     }
-
-    return appointments;
+    
+    return times;
 };
