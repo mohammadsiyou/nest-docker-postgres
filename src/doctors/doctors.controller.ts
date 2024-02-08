@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, InternalServerErrorException, Param, Post, Put } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, HttpException, InternalServerErrorException, NotFoundException, Param, Post, Put } from "@nestjs/common";
 import { DoctorsService } from "./doctors.service";
 import { CreateDoctorDto } from "./dto/create-doctor.dto";
 import { Doctor } from "./doctor.entity";
@@ -76,8 +76,26 @@ export class DoctorsController {
         if (!doctor)
             throw new InternalServerErrorException('Doctor not found');
 
-        const appointments = await this.appointmentsService.getDoctorAppointments(doctor);
+        const appointments = await this.appointmentsService.getDoctorAppointments(doctor.id);
 
         return appointments;
+    }
+
+    @Delete(':id/appointments/:appointmentId')
+    async deleteAppointment(@Param('id') id: string, @Param('appointmentId') appointmentId: string): Promise<void> {
+        const doctor = await this.findOne(id);
+
+        if (!doctor)
+            throw new InternalServerErrorException('Doctor not found');
+
+        const appointment = await this.appointmentsService.getAppointment(appointmentId);
+
+        if (!appointment)
+            throw new NotFoundException('Appointment not found');
+
+        if (appointment.isReserved)
+            throw new HttpException("The appointment has taken", 406)
+
+        await this.appointmentsService.deleteAppointment(appointmentId);
     }
 }
