@@ -37,7 +37,7 @@ export class DoctorsController {
 
     @Delete(':id')
     remove(@Param('id') id: string): Promise<void> {
-        return this.doctorsService.remove(id);
+        return this.doctorsService.delete(id);
     }
 
     @Post(':id/appointments')
@@ -70,7 +70,7 @@ export class DoctorsController {
     }
 
     @Get(':id/appointments')
-    async getAppointments(@Param('id') id: string,): Promise<Appointment[]> {
+    async getAppointments(@Param('id') id: string): Promise<Appointment[]> {
         const doctor = await this.findOne(id);
 
         if (!doctor)
@@ -86,15 +86,15 @@ export class DoctorsController {
         const doctor = await this.findOne(id);
 
         if (!doctor)
-            throw new InternalServerErrorException('Doctor not found');
+            throw new InternalServerErrorException('Doctor not found.');
 
         const appointment = await this.appointmentsService.getAppointment(appointmentId);
 
         if (!appointment)
-            throw new NotFoundException('Appointment not found');
+            throw new NotFoundException('Appointment not found.');
 
         if (appointment.isReserved)
-            throw new HttpException("The appointment has taken", 406)
+            throw new HttpException("The appointment has taken.", 406)
 
         await this.appointmentsService.deleteAppointment(appointmentId);
     }

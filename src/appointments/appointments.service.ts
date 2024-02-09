@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { Appointment } from "./appointment.entity";
-import { And, DataSource, LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, Repository } from "typeorm";
+import { And, DataSource, Equal, LessThan, LessThanOrEqual, MoreThan, MoreThanOrEqual, Not } from "typeorm";
 import { Doctor } from "src/doctors/doctor.entity";
+import { Patient } from "src/patients/patient.entity";
 
 @Injectable()
 export class AppointmentsService {
@@ -20,6 +21,11 @@ export class AppointmentsService {
                 },
                 {
                     startDate: LessThanOrEqual(start), endDate: MoreThanOrEqual(end)
+                },
+                {
+                    doctor: {
+                        id: Not(Equal(doctor.id))
+                    }
                 }
             ]
         });
@@ -85,10 +91,83 @@ export class AppointmentsService {
 
             await queryRunner.commitTransaction()
         } catch (err) {
-            console.log("Error in deleting appointment");
+            console.log("Error in deleting the appointment.");
             await queryRunner.rollbackTransaction()
         } finally {
             await queryRunner.release()
         }
+    }
+
+    async getOpenAppointments(): Promise<Appointment[]> {
+        const appointments = await this.dataSource.manager.find(Appointment, {
+            relations: {
+                doctor: true
+            },
+            where: {
+                startDate: MoreThanOrEqual(new Date()),
+                isReserved: false
+            },
+            select: {
+                id: true,
+                startDate: true,
+                doctor: {
+                    fullName: true
+                }
+            }
+        });
+
+        return appointments;
+    }
+
+    async takeAppointment(appointmentId: string, patient: Patient) {
+        const queryRunner = this.dataSource.createQueryRunner();
+
+        await queryRunner.connect();
+
+        await queryRunner.startTransaction();
+
+        try {
+            await queryRunner.manager.createQueryBuilder(Appointment, "appointment")
+                .useTransaction(true)
+                .setLock('pessimistic_write')
+                .setOnLocked('nowait')
+                .where('id = :appointmentId', { appointmentId })
+                .andWhere('isReserved = false')
+                .update()
+                .set({
+                    patient,
+                    isReserved: true,
+                })
+                .execute();
+
+            await queryRunner.commitTransaction()
+        } catch (err) {
+            console.log("Error in taking the appointment.");
+            await queryRunner.rollbackTransaction()
+        } finally {
+            await queryRunner.release()
+        }
+    }
+
+    async getPatientAppointments(patientId: string): Promise<Appointment[]> {
+        const appointments = await this.dataSource.manager.find(Appointment, {
+            relations: {
+                doctor: true
+            },
+            where: {
+                patient: {
+                    id: patientId
+                }
+            },
+            select: {
+                id: true,
+                startDate: true,
+                doctor: {
+                    fullName: true,
+                }
+            }
+        });
+
+        return appointments;
     }
 }

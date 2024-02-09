@@ -7,12 +7,12 @@ import { Repository } from "typeorm";
 export class DoctorsService {
     constructor(@InjectRepository(Doctor) private doctorsRepository: Repository<Doctor>) { }
 
-    findAll(): Promise<Doctor[]> {
-        return this.doctorsRepository.find();
+    async findAll(): Promise<Doctor[]> {
+        return await this.doctorsRepository.find();
     }
 
-    findOne(id: string): Promise<Doctor> {
-        return this.doctorsRepository.findOneBy({ id });
+    async findOne(id: string): Promise<Doctor> {
+        return await this.doctorsRepository.findOneBy({ id });
     }
 
     async create(doctor: Partial<Doctor>): Promise<Doctor> {
@@ -26,7 +26,7 @@ export class DoctorsService {
         return this.doctorsRepository.findOneBy({ id });
     }
 
-    async remove(id: string): Promise<void> {
+    async delete(id: string): Promise<void> {
         await this.doctorsRepository.delete({ id });
     }
 }
