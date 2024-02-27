@@ -23,6 +23,7 @@ export class DoctorsService {
 
     async update(id: string, doctor: Partial<Doctor>): Promise<Doctor> {
         await this.doctorsRepository.update(id, doctor);
+        
         return this.doctorsRepository.findOneBy({ id });
     }
 
