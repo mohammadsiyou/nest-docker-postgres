@@ -1,4 +1,4 @@
 export interface CreateAppointmentDto {
-    startDate: Date;
-    endDate: Date;
+	startDate: Date;
+	endDate: Date;
 }

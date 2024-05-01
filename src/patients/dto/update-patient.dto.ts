@@ -1,4 +1,4 @@
 export class UpdatePatientDto {
-    fullName: string;
-    phoneNumber: string;
+	fullName: string;
+	phoneNumber: string;
 }

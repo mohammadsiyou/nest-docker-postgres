@@ -9,26 +9,26 @@ import { PatientsModule } from './patients/patients.module';
 import { Patient } from './patients/patient.entity';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync({
-      useFactory: (config: ConfigService) => {
-        return {
-          type: 'postgres',
-          host: config.get('DB_HOST'),
-          port: config.get('DB_PORT'),
-          username: config.get('DB_USERNAME'),
-          password: config.get('DB_PASSWORD'),
-          database: config.get('DB_DATABASE'),
-          entities: [Doctor, Appointment, Patient],
-          synchronize: process.env.NODE_ENV !== 'production',
-        };
-      },
-      inject: [ConfigService],
-    }),
-    DoctorsModule,
-    AppoinmentsModule,
-    PatientsModule,
-  ],
+	imports: [
+		ConfigModule.forRoot({ isGlobal: true }),
+		TypeOrmModule.forRootAsync({
+			useFactory: (config: ConfigService) => {
+				return {
+					type: 'postgres',
+					host: config.get('DB_HOST'),
+					port: config.get('DB_PORT'),
+					username: config.get('DB_USERNAME'),
+					password: config.get('DB_PASSWORD'),
+					database: config.get('DB_DATABASE'),
+					entities: [Doctor, Appointment, Patient],
+					synchronize: false,
+				};
+			},
+			inject: [ConfigService],
+		}),
+		DoctorsModule,
+		AppoinmentsModule,
+		PatientsModule,
+	],
 })
-export class AppModule { }
+export class AppModule {}

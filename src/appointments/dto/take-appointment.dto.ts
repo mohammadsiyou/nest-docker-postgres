@@ -1,3 +1,3 @@
 export interface TakeAppointmentDto {
-    appointmentId: string;
+	appointmentId: string;
 }

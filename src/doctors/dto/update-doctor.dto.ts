@@ -1,4 +1,4 @@
 export class UpdateDoctorDto {
-    fullName: string;
-    email: string;
+	fullName: string;
+	email: string;
 }

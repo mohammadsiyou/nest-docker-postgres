@@ -1,4 +1,4 @@
 export class CreatePatientDto {
-    fullName: string;
-    phoneNumber: string;
+	fullName: string;
+	phoneNumber: string;
 }
