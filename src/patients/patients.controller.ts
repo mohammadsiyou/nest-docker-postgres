@@ -1,11 +1,10 @@
 import { Body, Controller, Delete, Get, HttpException, NotFoundException, Param, Post, Put } from '@nestjs/common';
-import { PatientsService } from './patients.service';
-import { AppointmentsService } from 'src/appointments/appointments.service';
-import { Patient } from './patient.entity';
-import { CreatePatientDto } from './dto/create-patient.dto';
-import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Appointment } from 'src/appointments/appointment.entity';
+import { AppointmentsService } from 'src/appointments/appointments.service';
 import { TakeAppointmentDto } from 'src/appointments/dto/take-appointment.dto';
+import { UpdatePatientDto } from './dto/update-patient.dto';
+import { Patient } from './patient.entity';
+import { PatientsService } from './patients.service';
 
 @Controller('patients')
 export class PatientsController {
@@ -29,10 +28,10 @@ export class PatientsController {
 		return this.patientsService.findOne(id);
 	}
 
-	@Post()
-	create(@Body() createDoctorDto: CreatePatientDto): Promise<Patient> {
-		return this.patientsService.create(createDoctorDto);
-	}
+	// @Post()
+	// create(@Body() registerDoctorDto: RegisterPatientDto): Promise<Patient> {
+	// 	return this.patientsService.create(registerDoctorDto);
+	// }
 
 	@Put(':id')
 	update(@Param('id') id: string, @Body() updateDoctorDto: UpdatePatientDto) {

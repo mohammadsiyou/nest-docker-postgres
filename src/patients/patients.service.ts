@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Patient } from './patient.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PatientsService {
@@ -13,6 +13,10 @@ export class PatientsService {
 
 	async findOne(id: string): Promise<Patient> {
 		return await this.patientsRepository.findOneBy({ id });
+	}
+
+	async findByPhoneNumber(phoneNumber: string): Promise<Patient> {
+		return await this.patientsRepository.findOneBy({ phoneNumber });
 	}
 
 	async create(patient: Partial<Patient>): Promise<Patient> {
