@@ -1,0 +1,4 @@
+{
+	"eslint.validate": ["javascript", "javascriptreact", "typescript"],
+	"editor.codeActionsOnSave": { "source.fixAll.eslint": "always", "source.organizeImports": "always" }
+}
