@@ -1,11 +1,24 @@
-import { Body, Controller, Delete, Get, HttpException, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	HttpException,
+	NotFoundException,
+	Param,
+	Post,
+	Put,
+	UseGuards,
+} from '@nestjs/common';
 import { Appointment } from 'src/appointments/appointment.entity';
 import { AppointmentsService } from 'src/appointments/appointments.service';
 import { TakeAppointmentDto } from 'src/appointments/dto/take-appointment.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './patient.entity';
 import { PatientsService } from './patients.service';
 
+@UseGuards(AuthGuard)
 @Controller('patients')
 export class PatientsController {
 	constructor(

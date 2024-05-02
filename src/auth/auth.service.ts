@@ -1,4 +1,5 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as pick from 'lodash/pick';
 import { LoginPatientDto } from 'src/patients/dto/login-patient.dto';
@@ -8,7 +9,10 @@ import { PatientsService } from 'src/patients/patients.service';
 
 @Injectable()
 export class AuthService {
-	constructor(private patientsService: PatientsService) {}
+	constructor(
+		private patientsService: PatientsService,
+		private jwtService: JwtService
+	) {}
 
 	async hashPassword(password: string): Promise<string> {
 		const saltRounds = 10;
@@ -54,6 +58,10 @@ export class AuthService {
 
 		if (!isPasswordMatch) throw new UnauthorizedException();
 
-		return pick(patient, ['id', 'fullName', 'phoneNumber']);
+		const payload = { sub: patient.id, phoneNumber: patient.phoneNumber };
+
+		return {
+			access_token: await this.jwtService.signAsync(payload),
+		};
 	}
 }
